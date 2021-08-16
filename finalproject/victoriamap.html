@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Amenities in Victoria - GIS 103 Final project</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
+    <!-- <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script> -->
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0%;
+        right: 80%;
+        width: 80%;
+        height: 80%;
+    }
+    #legend {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 80%;
+        right: 100%;
+        width: 20%;
+        height: 80%;
+        background: blue;
+    }
+    #legend h1 {
+        font-family: "Verdana", "Arial", sans-serif;
+        color: #88aaff;
+        text-align: center;
+    }
+    #data {
+        position: absolute;
+        top: 80%;
+        bottom: 100%;
+        width: 100%;
+        height: 20%;
+        background: black;
+    }
+    #data h1 {
+        font-family: "Verdana", "Arial", sans-serif;
+        color: blue;
+    }
+
+    #legend p {
+        font-family: "Verdana", "Arial", sans-serif;
+        color: white;
+    }
+
+    </style>
+</head>
+<body>
+    <div id='map'>
+        <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fzc2ludmljdG9yaWEiLCJhIjoiY2txN2Y5eHRlMDVuYTJubDNsd2p6Y2lpciJ9.WB8DWmpmujlT76LXndZm1Q';
+        var popup = new mapboxgl.Popup();
+        var map = new mapboxgl.Map({
+          container: 'map', // container id
+          style: 'mapbox://styles/cassinvictoria/cks6xg1ow8ouk17qwwzo1smg2', // stylesheet location
+          center: [-123.35, 48.45], // starting position
+          zoom: 11 // starting zoom,
+        });
+        var clock ={
+            "type": "FeatureCollection",
+            "generator": "overpass-ide",
+            "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+            "timestamp": "2021-08-10T05:39:42Z",
+            "features": [
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/1910707518",
+                    "amenity": "clock",
+                    "description": "sun dial"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3634599,
+                      48.4131806
+                    ]
+                  },
+                  "id": "node/1910707518"
+                },
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/3361215750",
+                    "amenity": "clock",
+                    "date": "yes",
+                    "display": "digital",
+                    "man_made": "monitoring_station",
+                    "monitoring:bicycle": "yes",
+                    "name": "Galloping Goose Regional Trail",
+                    "source": "bing:orto",
+                    "start_date": "2014",
+                    "support": "pole",
+                    "thermometer": "yes",
+                    "visibility": "street",
+                    "website": "http://www.eco-public.com/public2/?id=100117730"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3782642,
+                      48.4326103
+                    ]
+                  },
+                  "id": "node/3361215750"
+                }
+              ]
+            }
+        var police = {
+          "type": "FeatureCollection",
+          "generator": "overpass-ide",
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "timestamp": "2021-08-10T05:33:27Z",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/32555845",
+                "amenity": "police",
+                "email": "info@oakbaypolice.org",
+                "fax": "+1-250-592-9988",
+                "name": "Oak Bay Police Department",
+                "phone": "+1-250-592-2424",
+                "website": "https://www.oakbay.ca/public-safety/police-department"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.312786,
+                  48.4292942
+                ]
+              },
+              "id": "node/32555845"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/528554827",
+                "amenity": "police",
+                "email": "info@vicpd.ca",
+                "fax": "+1-250-384-1362",
+                "name": "Victoria Police Department - West Division",
+                "phone": "+1-250-995-7654",
+                "website": "https://vicpd.ca/",
+                "wikidata": "Q7926969",
+                "wikipedia": "en:Victoria Police Department"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.4152764,
+                  48.4294077
+                ]
+              },
+              "id": "node/528554827"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/3376605169",
+                "amenity": "police",
+                "fax": "+1-250-475-6153",
+                "name": "Saanich Police Department",
+                "phone": "+1-250-475-4321",
+                "website": "http://www.saanichpolice.ca/",
+                "wikidata": "Q7395667",
+                "wikipedia": "en:Saanich Police Department"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3772265,
+                  48.4599702
+                ]
+              },
+              "id": "node/3376605169"
+            }
+          ]
+        }
+        var drinking_water = {
+          "type": "FeatureCollection",
+          "generator": "overpass-ide",
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "timestamp": "2021-08-10T05:21:20Z",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/303891411",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3657133,
+                  48.4521841
+                ]
+              },
+              "id": "node/303891411"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1037073473",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3168117,
+                  48.4264109
+                ]
+              },
+              "id": "node/1037073473"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1396613554",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3661461,
+                  48.4082045
+                ]
+              },
+              "id": "node/1396613554"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1453433261",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3101229,
+                  48.4132958
+                ]
+              },
+              "id": "node/1453433261"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1486523951",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.4269783,
+                  48.4648852
+                ]
+              },
+              "id": "node/1486523951"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1514883018",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.347589,
+                  48.4313548
+                ]
+              },
+              "id": "node/1514883018"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1514990806",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3741442,
+                  48.4101177
+                ]
+              },
+              "id": "node/1514990806"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1515003425",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3541449,
+                  48.4280099
+                ]
+              },
+              "id": "node/1515003425"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1515686375",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3444625,
+                  48.4447741
+                ]
+              },
+              "id": "node/1515686375"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1515686533",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3401307,
+                  48.4480069
+                ]
+              },
+              "id": "node/1515686533"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1516044151",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3813739,
+                  48.430632
+                ]
+              },
+              "id": "node/1516044151"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1912207666",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3628848,
+                  48.4123842
+                ]
+              },
+              "id": "node/1912207666"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1912207669",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.362903,
+                  48.4133314
+                ]
+              },
+              "id": "node/1912207669"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1914627869",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3668968,
+                  48.4124819
+                ]
+              },
+              "id": "node/1914627869"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1926178961",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3425361,
+                  48.4189166
+                ]
+              },
+              "id": "node/1926178961"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1975993064",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.2939833,
+                  48.4462134
+                ]
+              },
+              "id": "node/1975993064"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/2646748652",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3076333,
+                  48.421693
+                ]
+              },
+              "id": "node/2646748652"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/2646748654",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3086665,
+                  48.4210943
+                ]
+              },
+              "id": "node/2646748654"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/2646748657",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3027679,
+                  48.4234571
+                ]
+              },
+              "id": "node/2646748657"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/2646928173",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3103647,
+                  48.4131811
+                ]
+              },
+              "id": "node/2646928173"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/3775681443",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3498248,
+                  48.4043922
+                ]
+              },
+              "id": "node/3775681443"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/4173501486",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3553782,
+                  48.4454098
+                ]
+              },
+              "id": "node/4173501486"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/4381195792",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3780433,
+                  48.4331181
+                ]
+              },
+              "id": "node/4381195792"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/4921014411",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3783357,
+                  48.4120424
+                ]
+              },
+              "id": "node/4921014411"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/4988923440",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3685785,
+                  48.4226896
+                ]
+              },
+              "id": "node/4988923440"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/5029849939",
+                "amenity": "drinking_water",
+                "bottle": "no"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3833328,
+                  48.4277632
+                ]
+              },
+              "id": "node/5029849939"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/5309688592",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3065902,
+                  48.4232994
+                ]
+              },
+              "id": "node/5309688592"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/5809830439",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3776423,
+                  48.4559327
+                ]
+              },
+              "id": "node/5809830439"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/6778379721",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.4363418,
+                  48.4582415
+                ]
+              },
+              "id": "node/6778379721"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/7177732492",
+                "access": "yes",
+                "amenity": "drinking_water",
+                "bottle": "no"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3888387,
+                  48.4282215
+                ]
+              },
+              "id": "node/7177732492"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/8185864022",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3814974,
+                  48.413772
+                ]
+              },
+              "id": "node/8185864022"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/8735234458",
+                "amenity": "drinking_water"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.349506,
+                  48.4057058
+                ]
+              },
+              "id": "node/8735234458"
+            }
+          ]
+        }
+        var library = {
+          "type": "FeatureCollection",
+          "generator": "overpass-ide",
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "timestamp": "2021-08-10T05:22:20Z",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/30189926",
+                "addr:housenumber": "735",
+                "addr:street": "Broughton Street",
+                "amenity": "library",
+                "internet_access": "wlan",
+                "name": "Central Library",
+                "opening_hours": "Mo,Fr,Sa 09:00-18:00; Th 09:00-21:00; Tu,We 09:00-21:00; Su 13:00-17:00",
+                "operator": "Greater Victoria Public Library",
+                "website": "https://www.gvpl.ca/branches-hours/central-branch/",
+                "wikidata": "Q5600809"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3641874,
+                  48.4230466
+                ]
+              },
+              "id": "node/30189926"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/142543717",
+                "amenity": "library",
+                "name": "Oak Bay Branch",
+                "operator": "Greater Victoria Public Library"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3150821,
+                  48.4255616
+                ]
+              },
+              "id": "node/142543717"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/276836287",
+                "amenity": "library",
+                "created_by": "Potlatch 0.9c",
+                "name": "Saanich Centennial Library Branch",
+                "operator": "Greater Victoria Public Library",
+                "toilets:wheelchair": "yes",
+                "wheelchair": "yes"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3988109,
+                  48.453874
+                ]
+              },
+              "id": "node/276836287"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/1657150031",
+                "amenity": "library",
+                "name": "Greater Victoria Public Library - Esquimalt Branch"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.4137733,
+                  48.4298239
+                ]
+              },
+              "id": "node/1657150031"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/2715046461",
+                "addr:housenumber": "3521",
+                "addr:street": "Blanshard Street",
+                "addr:unit": "101",
+                "amenity": "library",
+                "name": "Emily Carr Branch",
+                "operator": "Greater Victoria Public Library",
+                "wheelchair": "limited"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3739371,
+                  48.4558082
+                ]
+              },
+              "id": "node/2715046461"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/3597029865",
+                "amenity": "library",
+                "name": "McPherson Library",
+                "website": "https://www.uvic.ca/library",
+                "wheelchair": "yes"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3098283,
+                  48.4633395
+                ]
+              },
+              "id": "node/3597029865"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/5637941202",
+                "addr:city": "Victoria",
+                "addr:housenumber": "385",
+                "addr:postcode": "V8V 0C2",
+                "addr:street": "Menzies Street",
+                "amenity": "library",
+                "internet_access": "yes",
+                "internet_access:fee": "yes",
+                "name": "sxʷeŋxʷəŋ təŋəxʷ James Bay Branch",
+                "opened": "09 April 2018",
+                "opening_hours": "Mo,Tu,Th-Sa 10:00-18:00; We 10:00-21:00",
+                "operator": "Greater Victoria Public Library"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3723004,
+                  48.4178271
+                ]
+              },
+              "id": "node/5637941202"
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "@id": "node/6268965118",
+                "access": "customers",
+                "amenity": "library",
+                "indoor": "room",
+                "level": "1",
+                "name": "Library Lounge"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -123.3679561,
+                  48.4215129
+                ]
+              },
+              "id": "node/6268965118"
+            }
+          ]
+        }
+        var telephone ={
+              "type": "FeatureCollection",
+              "generator": "overpass-ide",
+              "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+              "timestamp": "2021-08-10T05:35:32Z",
+              "features": [
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/279408269",
+                    "amenity": "telephone",
+                    "operator": "Telus"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3218357,
+                      48.4419204
+                    ]
+                  },
+                  "id": "node/279408269"
+                },
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/1655711894",
+                    "amenity": "telephone"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3724754,
+                      48.4481232
+                    ]
+                  },
+                  "id": "node/1655711894"
+                },
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/2644243000",
+                    "amenity": "telephone"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3021629,
+                      48.4244001
+                    ]
+                  },
+                  "id": "node/2644243000"
+                },
+                {
+                  "type": "Feature",
+                  "properties": {
+                    "@id": "node/5031565042",
+                    "amenity": "telephone"
+                  },
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      -123.3824263,
+                      48.4168475
+                    ]
+                  },
+                  "id": "node/5031565042"
+                }
+              ]
+            }
+    var hospital = {
+      "type": "FeatureCollection",
+      "copyright": "The data included in this document is from Google Maps",
+      "timestamp": "2021-08-14T07:30:20Z",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "amenity": "hospital",
+            "name": "Royal Jubilee Hospital"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3276353,
+              48.4327423
+            ]
+          },
+          "id": "1"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "amenity": "hospital",
+            "name": "Victoria General Hospital"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.432576,
+              48.4668086
+            ]
+          },
+          "id": "2"
+        }
+      ]
+    }
+
+    var toilets = {
+      "type": "FeatureCollection",
+      "generator": "overpass-ide",
+      "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+      "timestamp": "2021-08-10T05:36:37Z",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/401421908",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3654778,
+              48.4289218
+            ]
+          },
+          "id": "node/401421908"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/470217793",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.358249,
+              48.4082881
+            ]
+          },
+          "id": "node/470217793"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/477197970",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3441884,
+              48.4092629
+            ]
+          },
+          "id": "node/477197970"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1037073507",
+            "amenity": "toilets",
+            "fee": "no",
+            "wheelchair": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3167959,
+              48.4259899
+            ]
+          },
+          "id": "node/1037073507"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1424881083",
+            "amenity": "toilets",
+            "changing_table": "no",
+            "female": "no",
+            "male": "yes",
+            "toilets:position": "urinal"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3668252,
+              48.4283052
+            ]
+          },
+          "id": "node/1424881083"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1514974813",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3640084,
+              48.4421912
+            ]
+          },
+          "id": "node/1514974813"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1692226684",
+            "amenity": "toilets",
+            "source": "survey",
+            "source:location": "gps",
+            "wheelchair": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3690384,
+              48.4228185
+            ]
+          },
+          "id": "node/1692226684"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1701708226",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.417812,
+              48.4227348
+            ]
+          },
+          "id": "node/1701708226"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1805711561",
+            "amenity": "toilets",
+            "building": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.4111935,
+              48.4659184
+            ]
+          },
+          "id": "node/1805711561"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/1926178993",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3411497,
+              48.4185039
+            ]
+          },
+          "id": "node/1926178993"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/2644248211",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3021202,
+              48.424388
+            ]
+          },
+          "id": "node/2644248211"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/2651011371",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3112217,
+              48.4297076
+            ]
+          },
+          "id": "node/2651011371"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/4074853457",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.4103013,
+              48.4206551
+            ]
+          },
+          "id": "node/4074853457"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/4356798648",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.368769,
+              48.446974
+            ]
+          },
+          "id": "node/4356798648"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/4356798655",
+            "amenity": "toilets"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3691247,
+              48.4478856
+            ]
+          },
+          "id": "node/4356798655"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/4683888993",
+            "amenity": "toilets",
+            "unisex": "yes",
+            "wheelchair": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3683661,
+              48.4259586
+            ]
+          },
+          "id": "node/4683888993"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/4995885521",
+            "amenity": "toilets",
+            "opening_hours": "Mo-Su 09:00-19:00",
+            "operator": "Market Place"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3685884,
+              48.4283818
+            ]
+          },
+          "id": "node/4995885521"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5154507955",
+            "amenity": "toilets",
+            "unisex": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3987143,
+              48.4283788
+            ]
+          },
+          "id": "node/5154507955"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5984478290",
+            "amenity": "toilets",
+            "fee": "no",
+            "toilets:disposal": "flush",
+            "unisex": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3444182,
+              48.4550263
+            ]
+          },
+          "id": "node/5984478290"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/6005908985",
+            "amenity": "toilets",
+            "opening_hours": "24/7",
+            "operator": "Steamship Grill & Bar"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3715104,
+              48.4210625
+            ]
+          },
+          "id": "node/6005908985"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/6268965126",
+            "access": "permissive",
+            "amenity": "toilets",
+            "indoor": "yes",
+            "level": "0"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3677854,
+              48.4215788
+            ]
+          },
+          "id": "node/6268965126"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/6268965130",
+            "access": "permissive",
+            "amenity": "toilets",
+            "fee": "no",
+            "level": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.3674638,
+              48.4213469
+            ]
+          },
+          "id": "node/6268965130"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/6699523821",
+            "amenity": "toilets",
+            "toilets:disposal": "chemical",
+            "unisex": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.4384574,
+              48.460504
+            ]
+          },
+          "id": "node/6699523821"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/8898713818",
+            "amenity": "toilets",
+            "unisex": "yes",
+            "wheelchair": "yes"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -123.4125983,
+              48.4415113
+            ]
+          },
+          "id": "node/8898713818"
+        }
+      ]
+    }
+        map.on('load', function() {
+          map.addLayer({
+            id: 'telephones',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: telephone
+            },
+            layout: {
+              'icon-image': 'communications-tower-15',
+              'icon-allow-overlap': true
+            },
+            paint: { }
+          });
+          map.addLayer({
+            id: 'libraries',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: library
+            },
+            layout: {
+              'icon-image': 'library-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+          map.addLayer({
+            id: 'clocks',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: clock
+            },
+            layout: {
+              'icon-image': 'watch-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+          map.addLayer({
+            id: 'police',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: police
+            },
+            layout: {
+              'icon-image': 'police-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+          map.addLayer({
+            id: 'toilets',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: toilets
+            },
+            layout: {
+              'icon-image': 'toilet-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+          map.addLayer({
+            id: 'drinking_water',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: drinking_water
+            },
+            layout: {
+              'icon-image': 'drinking-water-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+          map.addLayer({
+            id: 'hospitals',
+            type: 'symbol',
+            source: {
+              type: 'geojson',
+              data: hospital
+            },
+            layout: {
+              'icon-image': 'hospital-15',
+              'icon-allow-overlap': true
+            },
+            paint: {
+            }
+          });
+        });
+
+        map.on('mousemove', function(e) {
+            var features = map.queryRenderedFeatures(e.point, { layers: ['clocks', 'telephones', 'police', 'libraries', 'toilets', 'drinking_water', 'hospitals'] });
+            if (!features.length) {
+            popup.remove();
+            return;
+            }
+              var feature = features[0];
+              var fname = feature.properties.name || "";
+              var descr = feature.properties.description || "";
+
+              popup.setLngLat(feature.geometry.coordinates)
+                .setHTML("<b>" + feature.properties.amenity + "</b>: " + fname + descr)
+                .addTo(map);
+
+              map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+        });
+        map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right', unit: 'metric'}));
+        map.addControl(new mapboxgl.NavigationControl());
+        map.addControl(L.mapbox.legendControl());
+        </script>
+    </div>
+    <div id='legend'>
+        <h1>Legend</h1>
+        <p><img src="svgs/hospital.svg" alt="Hospital icon">Hospital</p>
+        <p><img src="svgs/drinking-water.svg" alt="Drinking Water Icon">Drinking Fountain</p>
+        <p><img src="svgs/toilet.svg" alt="Toilet Icon">Public Toilet</p>
+        <p><img src="svgs/communications-tower.svg" alt="Telephone Icon">Pay Phone</p>
+        <p><img src="svgs/library.svg" alt="Library Icon">Libary</p>
+        <p><img src="svgs/police.svg" alt="Police Icon">Police</p>
+        <p><img src="svgs/watch.svg" alt="Clock Icon">Clock</p>
+    </div>
+    <div id='data'>
+        <h1>Basic Amenities in Victoria</h1>
+        <p>Aside from the hospitals which were input manually as collected from Google Maps, the data included in this document is from www.openstreetmap.org. The data is made available under ODbL.</p>
+    </div>
+</body>
+</html>
